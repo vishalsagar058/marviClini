@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+
+  {% block headPart %}
+  
+  <script>
+
+    function updatePrice(someName){
+      var prevPrice = parseInt(document.getElementById('priceID').value);
+      document.getElementById('priceID').value = prevPrice + 1;
+    }
+
+    function addFormRow() {
+      var formContainer = document.getElementById("myForm");
+      var formRow = document.createElement("div");
+      formRow.classList.add("form-row");
+
+      var varinp = parseInt(document.getElementById("varInput").value) + 1;
+      document.getElementById("varInput").value = varinp;      
+
+      formRow.innerHTML = `
+      <label for="name${varinp}">Medicine:</label>
+      <div class="row">
+      <select class="form-select form-select-md col" onchange="updatePrice(this)" id="name${varinp}" name="med${varinp}">
+        <option selected>Open this select menu</option>
+        {% for medicine in medicines %}
+          <option value="{{ medicine.medName }}">{{ medicine.medName }}</option>
+        {% endfor %}
+      </select>
+      <input type="number" class="col" placeholder="Dose" name="dose${varinp}" >
+      <select class="form-select col" name="duration${varinp}">
+        <option selected>Select dose duration</option>
+        <option value="1"> Days </option>
+        <option value="7"> Weeks </option>
+        <option value="30"> Months </option>
+      </select>
+      </div>
+
+      <div class="switch-field">
+        <input type="radio" id="radio-three${varinp}" name="radio${varinp}" value="1" checked/>
+        <label for="radio-three${varinp}">OPD</label>
+        <input type="radio" id="radio-four${varinp}" name="radio${varinp}" value="2" />
+        <label for="radio-four${varinp}">TPD</label>
+        <input type="radio" id="radio-five${varinp}" name="radio${varinp}" value="3" />
+        <label for="radio-five${varinp}">THPD</label>
+      </div>
+    `;
+    
+      formContainer.appendChild(formRow);
+    }
+
+
+  </script>
+
+  {% endblock  %} 
+
+
+
+
+  {% block bodyPart %}
+
+  
+  <form style="margin:2%" class="row g-3 needs-validation" method='POST' action="/" validate>
+    {% csrf_token %}
+    <div class="col-md-4">
+      <label for="fnID" class="form-label">Full name</label>
+      <input type="text" class="form-control" id="fnID" name="fullName" required>
+
+    </div>
+
+    <div class="col-md-4">
+      <label for="phnID" class="form-label">Phone number</label>
+      <div class="input-group has-validation">
+
+        <input type="number" class="form-control" name="phoneNumber" value="03" id="phnID">
+
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="ageId" class="form-label">Age</label>
+      <div class="input-group has-validation">
+
+        <input type="number" class="form-control" name="age" id="ageId" required>
+
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="bpID" class="form-label"></label>
+      <div class="input-group has-validation">
+        <span class="input-group-text" id="inputGroupPrepend">Blood Pressure</span>
+        <input type="number" class="form-control" id="bpID" name="bloodPressure">
+
+      </div>
+    </div>
+    <div class="col-md-4">
+      <label for="tempID" class="form-label"></label>
+      <div class="input-group has-validation">
+        <span class="input-group-text" id="inputGroupPrepend">Tempreture</span>
+        <input type="number" class="form-control" id="tempID" name="tempreture">
+
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <label for="tempID" class="form-label"></label>
+      <div class="input-group has-validation">
+        <span class="input-group-text" id="inputGroupPrepend">Price</span>
+        <input type="number" class="form-control" id="priceID" name="currentPrice" value="0" disabled style="color: red;">
+
+      </div>
+    </div>
+
+
+      <div id="myForm">
+         
+      <input type="hidden" value="{{ varInput }}" id="varInput" name="varInput">
+      <input type="hidden" value="{{ medicines }}" id="availabeMed">
+        
+      </div>
+      <button type="button" onclick="addFormRow()">Add medicine</button>
+
+
+
+
+    </div>
+    <span class="col-12">
+      {% comment %} <button class="btn btn-primary" type="submit">Save</button> {% endcomment %}
+      <button class="btn btn-primary" type="submit">Save & print</button>
+    </span>
+  </form>
+
+  {% endblock bodyPart %}
+
+
+
+

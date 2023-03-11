@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block bodyPart %}
+
+<div class="table-responsive">
+<table class="table">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Medicine Name</th>
+      <th scope="col">Current Stock</th>
+      <th scope="col">Price</th>
+      <th scope="col">Last loaded stock</th>
+      <th scope="col">last loading date</th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for med in medicines %}
+
+    <tr>
+      <th scope="row">{{forloop.counter0}}</th>
+      <td>{{med.medName}}</td>
+      <td>{{med.currentStock}}</td>
+      <td>{{med.price}}</td>
+      <td>{{med.lastLoadedStock}}</td>
+      <td>{{med.lastLoadingStock}}</td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+
+</table>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+  Add Medicines Manually
+</button>
+
+<!-- Modal -->
+
+<form action="/medicines" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+
+          <h5 class="modal-title" id="staticBackdropLabel">Adding medicines manually</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+
+          <!-- <form action="" method="post"> -->
+            <div class="table-responsive">
+          <table id="medEntryTable" class="table">
+            <thead >
+              <tr>
+                <th scope="col">Medicine Name</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Price</th>
+                <th scope="col">loading date</th>
+              </tr>
+            </thead>
+            <tbody>
+
+
+
+              <tr>
+                <!-- <th scope="row"></th> -->
+                <td><input type="text" name="name1" id="nameID1" placeholder="Enter name"></td>
+                <td><input type="number" name="stock1" id="stockID1" placeholder="Enter stock"></td>
+                <td><input type="number" name="price1" id="priceID1" placeholder="Enter price"></td>
+                <td><input type="datetime" name="dateID1" id="dateID1" value="{{todayDate}}"></td>
+              </tr>
+
+
+            </tbody>
+          </table>
+        </div>
+
+          <button type="button" class="btn btn-primary" onclick="addRow()">Add new row</button>
+          <!-- </form> -->
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+
+          <input type="hidden" id="counter" name="counter" value="1">
+          <button type="submit" class="btn btn-primary">Load</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="custom-file-upload">
+    <label for="file">From excel file: </label>
+    <input type="file" id="file" name="file"
+      accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" />
+      <button class="btn btn-primary" >Load</button>
+  </div>
+
+</form>
+
+
+
+
+{% endblock bodyPart %}
+
+{% block headPart %}
+<script>
+  function addRow() {
+
+    var counter = parseInt(document.getElementById("counter").value) + 1
+    document.getElementById("counter").value = counter
+
+    
+
+    var table = document.getElementById("medEntryTable");
+    var tr = table.insertRow();
+  
+    tr.innerHTML = `
+    <td><input type="text" name="name${counter}" id="nameID${counter}" placeholder="Enter name"></td>
+    <td><input type="number" name="stock${counter}" id="stockID${counter}" placeholder="Enter stock"></td>
+    <td><input type="number" name="price${counter}" id="priceID${counter}" placeholder="Enter price"></td>
+    <td><input type="datetime" name="dateID${counter}" id="dateID${counter}" value="{{todayDate}}"></td>
+    `;
+
+    
+  }
+</script>
+
+
+{% endblock headPart %}
